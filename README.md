@@ -1,7 +1,7 @@
 # claude-ruby-quality
 
 A **self-hosted Claude Code plugin marketplace** distributing Ruby/Rails
-code-quality skills. It ships two plugins:
+code-quality skills. It ships one plugin, **`ruby-quality`**, with two skills:
 
 - **`ruby-code-smells`** — reviews Ruby/Rails production code for code smells
   using thoughtbot's [Ruby Science](https://github.com/thoughtbot/ruby-science)
@@ -26,13 +26,12 @@ The marketplace name (`ruby-quality-marketplace`) comes from the `name` field in
 
 ```
 /plugin marketplace add chrisjgilbert/claude-ruby-quality
-/plugin install ruby-code-smells@ruby-quality-marketplace
-/plugin install ruby-test-smells@ruby-quality-marketplace
+/plugin install ruby-quality@ruby-quality-marketplace
 ```
 
-Install either or both. Claude invokes a skill automatically when you ask it to
-check for code smells or review tests, or you can call them directly:
-`/ruby-code-smells:ruby-code-smells` and `/ruby-test-smells:ruby-test-smells`.
+Installing the plugin enables both skills. Claude invokes a skill automatically
+when you ask it to check for code smells or review tests, or you can call them
+directly: `/ruby-quality:ruby-code-smells` and `/ruby-quality:ruby-test-smells`.
 
 > Note: the `displayName` field on the marketplace plugin entry requires Claude
 > Code v2.1.143 or later (it falls back to `name` on older versions).
@@ -41,26 +40,24 @@ check for code smells or review tests, or you can call them directly:
 
 Third-party plugins do **not** auto-update by default. To ship an update:
 
-1. Bump `version` in `ruby-code-smells/.claude-plugin/plugin.json` (semver) and
+1. Bump `version` in `ruby-quality/.claude-plugin/plugin.json` (semver) and
    commit/push. An unchanged version is skipped by clients.
 2. Users refresh and reinstall:
 
    ```
    /plugin marketplace update ruby-quality-marketplace
-   /plugin install ruby-code-smells@ruby-quality-marketplace
+   /plugin install ruby-quality@ruby-quality-marketplace
    ```
 
 ## Adding more later
 
-**Another skill inside an existing plugin** — the plugin auto-discovers
-everything under its `skills/` directory, so this needs **no marketplace.json
-change**. Drop in `ruby-code-smells/skills/<new-skill-name>/SKILL.md` (or under
-`ruby-test-smells/`) with `name` and `description` frontmatter, then bump that
-plugin's `version`.
+**Another skill** — the plugin auto-discovers everything under its `skills/`
+directory, so this needs **no marketplace.json change**. Drop in
+`ruby-quality/skills/<new-skill-name>/SKILL.md` with `name` and `description`
+frontmatter, then bump the plugin's `version`.
 
-**A whole new plugin** (like `ruby-test-smells`) — create
-`<plugin>/.claude-plugin/plugin.json` and `<plugin>/skills/<name>/SKILL.md`,
-then add one entry to the `plugins` array in
+**A whole new plugin** — create `<plugin>/.claude-plugin/plugin.json` and
+`<plugin>/skills/<name>/SKILL.md`, then add one entry to the `plugins` array in
 `.claude-plugin/marketplace.json` pointing `source` at `./<plugin>`.
 
 ## Layout
@@ -70,16 +67,12 @@ then add one entry to the `plugins` array in
 ├── README.md
 ├── .claude-plugin/
 │   └── marketplace.json          # marketplace catalog (name, owner, plugins[])
-├── ruby-code-smells/             # plugin 1 — production code smells
-│   ├── .claude-plugin/
-│   │   └── plugin.json
-│   └── skills/
-│       └── ruby-code-smells/
-│           └── SKILL.md
-└── ruby-test-smells/             # plugin 2 — test smells
+└── ruby-quality/                 # the plugin
     ├── .claude-plugin/
     │   └── plugin.json
     └── skills/
-        └── ruby-test-smells/
+        ├── ruby-code-smells/     # skill 1 — production code smells
+        │   └── SKILL.md
+        └── ruby-test-smells/     # skill 2 — test smells
             └── SKILL.md
 ```

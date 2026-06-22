@@ -7,14 +7,9 @@
   "description": "Ruby/Rails code-quality skills for Claude Code.",
   "plugins": [
     {
-      "name": "ruby-code-smells",
-      "displayName": "Code Smells — Ruby Science",
-      "source": "./ruby-code-smells"
-    },
-    {
-      "name": "ruby-test-smells",
-      "displayName": "Test Smells — xUnit Test Patterns",
-      "source": "./ruby-test-smells"
+      "name": "ruby-quality",
+      "displayName": "Ruby Quality — Code & Test Smells",
+      "source": "./ruby-quality"
     }
   ]
 }

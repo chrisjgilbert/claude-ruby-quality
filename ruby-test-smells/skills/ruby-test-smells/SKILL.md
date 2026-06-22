@@ -1,6 +1,6 @@
 ---
 name: ruby-test-smells
-description: Review Ruby test suites (RSpec and Minitest) for test smells using Gerard Meszaros' xUnit Test Patterns (http://xunitpatterns.com), thoughtbot's "Let's Not" (https://thoughtbot.com/blog/lets-not), and Sandi Metz's "Magic Tricks of Testing". Use when asked to review tests/specs, check test quality, audit a spec file or test diff, reduce flaky/slow/fragile tests, or simplify RSpec. Detects smells like Obscure Test, Mystery Guest, Eager Test, General Fixture, Assertion Roulette, Conditional Test Logic, Erratic/Flaky Test, Fragile Test, Slow Tests, Test Code Duplication, and RSpec DSL overuse (let/subject/before), and names the matching fix for each.
+description: Review Ruby test suites (RSpec and Minitest) for test smells using Gerard Meszaros' xUnit Test Patterns, thoughtbot's "Let's Not", and Sandi Metz's "Magic Tricks of Testing". Use when asked to review tests/specs, check test quality, audit a spec file or test diff, reduce flaky/slow/fragile tests, or simplify RSpec. Detects smells like Obscure Test, Mystery Guest, Eager Test, General Fixture, Assertion Roulette, Conditional Test Logic, Erratic/Flaky Test, Fragile Test, Slow Tests, Test Code Duplication, and RSpec DSL overuse (let/subject/before), and names the matching fix for each.
 ---
 
 # Test Smells (xUnit Test Patterns + Ruby practice)
@@ -50,6 +50,13 @@ spec/models/order_spec.rb:24 — Mystery Guest (data set up in a `before` block 
 End with a short summary: top 3 things worth fixing, and what's fine as-is.
 
 ## The catalog: smell → detection → fix
+
+Meszaros groups these as *Code Smells* (Obscure Test, Conditional Test Logic,
+Test Code Duplication, Test Logic in Production, Hard-to-Test Code) and
+*Behavior Smells* (Assertion Roulette, Erratic Test, Fragile Test, Slow Tests);
+they're listed flat below. His third category, *Project Smells* (high
+maintenance cost, developers not writing tests, production bugs), is team/PM-level
+and out of scope for a code review.
 
 ### Obscure Test
 - **Detect:** you can't tell what the test verifies at a glance. Usually caused
@@ -152,6 +159,12 @@ End with a short summary: top 3 things worth fixing, and what's fine as-is.
 
 ## RSpec DSL overuse (Let's Not)
 
+> **Calibrate before flagging.** `let`/`subject`/`before` are idiomatic in many
+> suites, and some style guides (e.g. Better Specs) actively recommend them.
+> This is a *contested* convention: follow the project's stated style, and only
+> flag DSL use when it genuinely obscures cause-and-effect. Don't mass-flag every
+> `let`.
+
 *Let's Not* argues RSpec's DSL is frequently overused, raising maintenance cost
 and lowering readability. Flag and prefer plain Ruby:
 
@@ -171,6 +184,29 @@ The goal is a test you can read top-to-bottom: arrange, act, assert, all in
 view. Reserve `before`/`let` for genuinely shared, incidental wiring — not for
 the data the assertion depends on.
 
+## Minitest equivalents
+
+The smells above are framework-agnostic; their Minitest manifestations:
+
+- **`setup`/`teardown` methods** are the Minitest analog of `before`/`after`,
+  with the same Mystery Guest risk when the data an assertion depends on is built
+  in `setup` far from the test. Prefer building the fixture inside the test method
+  (or a named helper) so arrange sits next to assert.
+- **Shared `TestCase` base classes or `include`d setup modules** are a common
+  General Fixture — each test uses only a slice of broad shared setup. Build only
+  what the test needs.
+- **`assert`/`refute` without a message** is Assertion Roulette: on failure you
+  can't tell which check broke. Pass the message argument
+  (`assert total.positive?, "expected a positive total"`) or extract a custom
+  assertion.
+- **Order dependence** surfaces Erratic Tests. Minitest randomizes order by
+  default; an `i_suck_and_my_tests_are_order_dependent!` call is a red flag that
+  tests share state. Isolate per-test state instead of pinning the order.
+- **Test doubles:** use `Minitest::Mock` and `stub` (or a hand-rolled fake) the
+  way the catalog uses RSpec doubles — mock only outgoing commands.
+- **`Minitest::Spec`** offers a `let`/`before`/`describe` DSL with the same
+  trade-offs as RSpec, so the *Let's Not* guidance above applies equally.
+
 ## What to test (Sandi Metz — Magic Tricks of Testing)
 
 Test the **messages crossing your object's boundary**, by message type:
@@ -182,7 +218,8 @@ Test the **messages crossing your object's boundary**, by message type:
 | **Outgoing**      | Don't test (it's the receiver's incoming) | Expect to send it (mock the message) |
 
 Rules of thumb: test the interface, not the implementation; don't test private
-methods directly; don't assert on outgoing queries; only mock outgoing commands.
+methods directly; don't assert on outgoing queries (you may still stub one to
+set up a test — just don't assert on it); only mock outgoing commands.
 Keep tests minimal — assert each thing once, in the cheapest test that can prove
 it.
 

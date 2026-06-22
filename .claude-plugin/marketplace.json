@@ -1,0 +1,15 @@
+{
+  "name": "ruby-quality-marketplace",
+  "owner": {
+    "name": "Chris Gilbert",
+    "email": "chris@chrisgilbert.dev"
+  },
+  "description": "Ruby/Rails code-quality skills for Claude Code.",
+  "plugins": [
+    {
+      "name": "ruby-code-smells",
+      "displayName": "Code Smells — Ruby Science",
+      "source": "./ruby-code-smells"
+    }
+  ]
+}

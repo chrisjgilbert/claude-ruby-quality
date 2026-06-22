@@ -1,0 +1,10 @@
+{
+  "name": "ruby-code-smells",
+  "description": "Review Ruby/Rails code for code smells using thoughtbot's Ruby Science catalog, and name the matching refactoring for each.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Chris Gilbert",
+    "email": "chris@chrisgilbert.dev"
+  },
+  "keywords": ["ruby", "rails", "refactoring", "code-quality", "ruby-science"]
+}

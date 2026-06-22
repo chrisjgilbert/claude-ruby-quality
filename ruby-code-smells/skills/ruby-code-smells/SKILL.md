@@ -1,6 +1,6 @@
 ---
 name: ruby-code-smells
-description: Review Ruby/Rails code for code smells using thoughtbot's Ruby Science catalog (https://github.com/thoughtbot/ruby-science). Use when asked to check for code smells, review Ruby code quality, find refactoring opportunities, or audit a class/method/diff against Ruby Science. Detects smells like Long Method, Large Class, Feature Envy, Case Statement, Shotgun Surgery, Divergent Change, Long Parameter List, Duplicated Code, Uncommunicative Name, STI, Comments, Mixin, and nil-checks, and names the matching refactoring for each.
+description: Review Ruby/Rails code for code smells using thoughtbot's Ruby Science catalog (https://github.com/thoughtbot/ruby-science). Use when asked to check for code smells, review Ruby code quality, find refactoring opportunities, or audit a class/method/diff against Ruby Science. Detects smells like Long Method, Large Class, Feature Envy, Case Statement, Shotgun Surgery, Divergent Change, Long Parameter List, Duplicated Code, Uncommunicative Name, STI, Comments, Mixin, Callback, and nil-checks, and names the matching refactoring for each.
 ---
 
 # Code Smells (Ruby Science)
@@ -119,6 +119,15 @@ End with a short summary: top 3 things worth fixing, and what's fine as-is.
 - **Refactor:** Replace Mixin with Composition; Extract Class; inject a
   collaborator instead of mixing in.
 
+### Callback (business logic in persistence callbacks)
+- **Detect:** `before_*`/`after_*` callbacks containing business logic
+  (sending email, processing payments, calling external services); attributes or
+  flags that skip callbacks (`save_without_sending_email`); callbacks guarded by
+  conditions. Side effects hidden inside the `save` lifecycle.
+- **Refactor:** Replace Callback with Method — move the non-persistence logic out
+  of the callback into an explicit, independently-callable method (or a service
+  object) so the side effect is visible to callers and safe across transactions.
+
 ### Nil checks / repeated `&.` / `try`
 - **Detect:** scattered `if x.nil?`, `x&.y`, `x.present?` guarding the same
   absent value in many places.
@@ -137,6 +146,10 @@ End with a short summary: top 3 things worth fixing, and what's fine as-is.
 - **Replace Conditional with Null Object** — branching on presence/nil.
 - **Replace Subclasses with Strategies / Replace Mixin with Composition** —
   prefer composition over inheritance/mixins.
+- **Replace Callback with Method** — business logic hidden in an ActiveRecord
+  callback; move it to an explicit method callers invoke directly.
+- **Use Class as Factory** — a class chooses which collaborator to build based on
+  a type/string; let the class own that construction instead of branching.
 - **Introduce Explaining Variable / Parameter Object** — tame complex
   expressions and signatures.
 - **Inject Dependencies** — hard-coded collaborators (HTTP clients, etc.) make a

@@ -14,13 +14,12 @@ Users add the marketplace by repo and install the plugin from it.
 
 ## Install
 
-> Replace `<owner>/<repo>` with this repository (e.g. `chrisjgilbert/claude-ruby-quality`)
-> and `<marketplace-name>` with the `name` from `.claude-plugin/marketplace.json`
-> (currently `ruby-quality-marketplace`). **Fill these in before sharing.**
+The marketplace name (`ruby-quality-marketplace`) comes from the `name` field in
+`.claude-plugin/marketplace.json` — keep these commands in sync if you rename it.
 
 ```
-/plugin marketplace add <owner>/<repo>
-/plugin install ruby-code-smells@<marketplace-name>
+/plugin marketplace add chrisjgilbert/claude-ruby-quality
+/plugin install ruby-code-smells@ruby-quality-marketplace
 ```
 
 Then run the skill — Claude invokes it automatically when you ask it to check
@@ -38,8 +37,8 @@ Third-party plugins do **not** auto-update by default. To ship an update:
 2. Users refresh and reinstall:
 
    ```
-   /plugin marketplace update <marketplace-name>
-   /plugin install ruby-code-smells@<marketplace-name>
+   /plugin marketplace update ruby-quality-marketplace
+   /plugin install ruby-code-smells@ruby-quality-marketplace
    ```
 
 ## Adding another skill later

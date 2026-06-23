@@ -76,3 +76,10 @@ frontmatter, then bump the plugin's `version`.
         └── ruby-test-smells/     # skill 2 — test smells
             └── SKILL.md
 ```
+
+## License
+
+[MIT](LICENSE) © Chris Gilbert. The skill content adapts catalogs from
+thoughtbot's *Ruby Science*, Gerard Meszaros' *xUnit Test Patterns*, thoughtbot's
+*Let's Not*, and Sandi Metz's *The Magic Tricks of Testing*; those works remain
+the property of their respective authors.

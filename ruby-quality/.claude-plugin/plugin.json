@@ -1,10 +1,13 @@
 {
   "name": "ruby-quality",
   "description": "Ruby/Rails code-quality skills for Claude Code: review production code for code smells (thoughtbot's Ruby Science) and review RSpec/Minitest suites for test smells (Meszaros' xUnit Test Patterns, thoughtbot's Let's Not, Sandi Metz's Magic Tricks of Testing), naming the matching refactoring or fix for each.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {
     "name": "Chris Gilbert",
     "email": "chris@chrisgilbert.dev"
   },
+  "homepage": "https://github.com/chrisjgilbert/claude-ruby-quality",
+  "repository": "https://github.com/chrisjgilbert/claude-ruby-quality",
+  "license": "MIT",
   "keywords": ["ruby", "rails", "refactoring", "code-quality", "ruby-science", "rspec", "minitest", "testing", "test-smells", "xunit"]
 }
